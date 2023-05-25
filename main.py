@@ -4,7 +4,6 @@
 import tkinter as tk
 from gui.views.view_manager import ViewManager
 
-
 def main():
     root = tk.Tk()
     root.title("E-Post")

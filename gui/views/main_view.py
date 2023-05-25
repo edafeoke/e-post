@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from tkinter import scrolledtext
 
 
 class MainView(tk.Frame):
@@ -36,21 +37,68 @@ class MainView(tk.Frame):
 
         # Email client
         self.email_tab = ttk.Frame(self)
-        self.tab_pane = ttk.Notebook(self.email_tab)
-        self.inbox_tab = ttk.Frame(self.tab_pane)
-        self.compose_tab = ttk.Frame(self.tab_pane)
-        self.tab_pane.add(self.inbox_tab, text="Inbox")
-        self.tab_pane.add(self.compose_tab, text="Compose")
+        self.email_scrollbar = tk.Scrollbar(self.email_tab)
+        self.email_list = tk.Listbox(
+            self.email_tab, selectmode=tk.SINGLE, yscrollcommand=self.email_scrollbar.set)
+        self.email_scrollbar.config(command=self.email_list.yview)
+
+        self.email_list.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        self.email_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+
+        # Add sample email titles to the list
+        email_titles = [
+            "Email 1",
+            "Email 2",
+            "Email 3",
+            "Email 4",
+            "Email 5",
+            "Email 6",
+            "Email 7",
+            "Email 8",
+            "Email 9",
+            "Email 10",
+            "Email 11",
+            "Email 12",
+            "Email 13",
+            "Email 14",
+            "Email 15",
+            "Email 16",
+            "Email 17",
+            "Email 18",
+            "Email 19",
+            "Email 20",
+        ]
+
+        for title in email_titles:
+            self.email_list.insert(tk.END, title)
+
+        self.email_list.bind("<<ListboxSelect>>", self.show_email_content)
+
+        self.email_preview = scrolledtext.ScrolledText(
+            self.email_tab, height=10, wrap=tk.WORD)
+        self.email_preview.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
         # Logout button
         self.logout_button = tk.Button(
             self, text="Logout", command=self.logout)
 
         # Pack widgets
-        self.label.pack(pady=10)
+        # self.label.pack(pady=10)
         self.email_tab.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-        self.tab_pane.pack(fill=tk.BOTH, expand=True)
         self.logout_button.pack(pady=5)
+
+    def show_email_content(self, event):
+        selected_index = self.email_list.curselection()
+        if selected_index:
+            # Retrieve the selected email title
+            selected_title = self.email_list.get(selected_index)
+
+            # Replace this with your logic to fetch email content based on the selected title
+            # For demonstration, simply display the title in the email preview pane
+            self.email_preview.delete(1.0, tk.END)
+            self.email_preview.insert(
+                tk.END, f"Email Title: {selected_title}\n")
 
     def logout(self):
         self.logout_callback()
+        self.menu_bar.destroy()
